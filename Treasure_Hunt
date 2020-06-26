@@ -1,0 +1,173 @@
+__author__ = 'Alex'
+from random import randint
+import random
+grid_size = 0
+
+
+def menu():
+    Menuchoice='!'
+
+    while Menuchoice not in ("1","2","x"):
+
+
+        print("This is a treasure hunt game, find chests to get points or find bandits and loose everything. created by Alex tweed")
+        print("Type 1 to play the game")
+        print("Type x to exit")
+
+        Menuchoice = str(input("Choice please --> "))
+    print(Menuchoice)
+
+    if Menuchoice == "1":
+        menu2()
+    elif Menuchoice == "2":
+        print("hello world 2")
+    elif Menuchoice == "x":
+        exit()
+
+#-----------------------------------------------------------------------------------------
+
+def menu2():
+    global g1
+    global grid_size
+    global treasure_coords
+    global bandit_coords
+    Menuchoice2 = '!'
+    while Menuchoice2 not in ("1", "2", "x"):
+
+        print("What size would you like your grid to be?")
+        print("Type 1 for 8x8 grid")
+        print("Type 2 for 10x10 grid")
+        print("Type 3 for 12x12 grid")
+
+        Menuchoice2 = str(input("Choice please --> "))
+        print(Menuchoice2)
+
+        if Menuchoice2 == "1":
+            grid_size = 8
+            break
+        elif Menuchoice2 == "2":
+            grid_size = 10
+            break
+        elif Menuchoice2 == "3":
+            grid_size = 12
+            break
+
+    g1 = grid_size * grid_size
+
+    menu3()
+
+
+
+
+#-----------------------------------------------------------------------------------------
+
+def menu3():
+    global treasure_amount
+    global bandit_ammount
+    treasure_amount = int(input("How many treasure chests would you like in the grid?"))
+    if treasure_amount > g1:
+        print("Sorry you have chosen to many treasure chests for the grid size you have chosen.")
+    else:
+        bandit_ammount = int(input("How many bandits would you like in the grid"))
+        if bandit_ammount + treasure_amount - 1 > g1:
+            print("Sorry you have chosen to many bandits for the grid size you have chosen.")
+            menu3()
+        else:
+
+            grid()
+
+#-----------------------------------------------------------------------------------------
+
+def grid():
+    global treasure_amount
+    global x
+    global y
+    global turn
+
+
+    board = []
+
+    for x in range(grid_size):
+        board.append(["•"] * grid_size)
+
+    possible_coords = [(x + 1, y + 1) for x in range(len(board[0])) for y in range(len(board))]
+    treasure_coords = random.sample(possible_coords, treasure_amount)
+    bandit_coords = random.sample(possible_coords, bandit_ammount)
+    while bandit_coords in treasure_coords or (0,grid_size-1) == treasure_coords or (0,grid_size-1) == bandit_coords:
+        treasure_coords = random.sample(possible_coords, treasure_amount)
+        bandit_coords = random.sample(possible_coords, bandit_ammount)
+    print(treasure_coords)
+    print(bandit_coords)
+
+    def print_board(board):
+        for row in board:
+            print(" ".join(row))
+
+    print("You are playing the game")
+    print_board(board)
+
+    def random_row(board):
+        return randint(1, len(board[0]) - 1)
+
+    def random_col(board):
+        return randint(1, len(board[0]) - 1)
+
+    turn = 0
+    coin_count = 0
+    for turn in range(64):
+        turn = turn + 1
+
+        x = int(input("x"))
+        y = int(input("y"))
+        #x = x-1
+        #y = y-1
+        #current_position = [x][y]
+        #position = x, y
+        if (x, y) in treasure_coords:
+            print("you have found the treasure")
+            board[x][y] = "3"
+            print_board(board)
+            print("Turn", turn + 1)
+            print("coins = ", coin_count + 10)
+            print("remaining bandits = ", bandit_ammount)
+
+
+        else:
+            if (x, y) in bandit_coords:
+                    print("Oh no! you have found a bandit")
+                    board[x][y] = "#"
+                    print_board(board)
+                    print("Turn", turn + 1)
+                    print("coins = ", coin_count - coin_count)
+                    print("remaining bandits = ", bandit_ammount)
+            else:
+                if (x > grid_size) or (y > grid_size):
+                        print("Sorry, that isn't on the grid.")
+                        print("coins = ", coin_count - coin_count)
+                        print("remaining bandits = ", bandit_ammount)
+                elif (board == "O"):
+                    print("You guessed that one already.")
+                    print("coins = ", coin_count - coin_count)
+                    print("remaining bandits = ", bandit_ammount)
+                else:
+                    if turn == 64:
+                        print("Game Over")
+                    else:
+                        print("Sorry there is no treasure here!")
+                        board[x][y] = "X"
+                        print("Turn", turn + 1)
+                        print("coins = ",coin_count)
+                        print("remaining bandits = ", bandit_ammount)
+                        print_board(board)
+
+
+
+
+
+
+
+
+
+
+
+menu()
