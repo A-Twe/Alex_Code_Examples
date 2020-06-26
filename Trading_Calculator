@@ -1,0 +1,105 @@
+__author__ = 'Alex'
+
+
+def menu():
+    Menuchoice='!'
+
+    while Menuchoice not in ("1","2","x"):
+        print("Get the trading edge through maths __ 1 ")
+        print("Type 1 to trigger a buy order")
+        print("Type 2 to trigger a sell order")
+        print("Type x to exit the program")
+
+        Menuchoice = str(input("Choice please --> "))
+    print(Menuchoice)
+
+    if Menuchoice == "1":
+        menu1()
+    elif Menuchoice == "2":
+        menu2()
+    elif Menuchoice == "x":
+        exit()
+
+
+def menu1():
+#Calculating the risk on the account.
+        Account_Value = float(input("Please enter the value of your account"))
+        Risk_Account = float(input("Please enter the % of risk you would like for your account (how much you willing to risk per trade) "))
+        Account_risk_1 = Account_Value/100
+        Account_risk_2 = Account_risk_1 * Risk_Account
+
+        #Obtaining later display information
+        Stock_Ticker = str(input("Please enter the Ticker symbol of your stock"))
+
+        #Calculating the stop loss on the position
+        Stock_Price = float(input("Please enter the price of your stock"))
+        Stock_Quantity = int(input("Please enter how many shares you want to hold on this position"))
+
+        Stock_Position_Value = Stock_Price * Stock_Quantity
+        if Stock_Position_Value > Account_Value:
+            print("Sorry this is not possible (trade position exceeds account value)")
+            menu1()
+        else:
+            Stop_Loss_Position = Stock_Position_Value - Account_risk_2
+
+            #This is equal to the price at which you should place your stop loss to satisfy you account risk
+            Stop_Loss_Stock_Value = Stop_Loss_Position / Stock_Quantity
+
+
+            #Calculating the take profit stock price
+
+            Risk_Reward_Cal = float(input("Please enter the Risk reward ratio you are aiming for (Assume risk is at 1, input the reward value you would like)."))
+
+            Pips_Reward_cal = Stock_Price - Stop_Loss_Stock_Value
+            Pips_Reward_cal_2 = Pips_Reward_cal * Risk_Reward_Cal
+            Pips_Reward_cal_3 = Pips_Reward_cal_2 + Stock_Price
+
+            print("----------------")
+            print("Ok i have done the calculations...")
+            print("On ticker symbol:",Stock_Ticker,"to hold an account risk of:",Risk_Account,"%, You will need to place:")
+            print("Stop-Loss at price:",format(round(Stop_Loss_Stock_Value,2)))
+            print("Take-Profit at price:",format(round(Pips_Reward_cal_3,2)))
+
+            Profit_Value = (Pips_Reward_cal_3 * Stock_Quantity) - Stock_Position_Value
+            Loss_Value = (Stop_Loss_Stock_Value * Stock_Quantity) - Stock_Position_Value
+            print("----------------")
+            print("Your potential profit and loss")
+            print("Potential Profit:", format(round(Profit_Value,2)))
+            print("Potential Loss:", format(round(Loss_Value,2)))
+
+
+def menu2():
+    Account_Value = float(input("Please enter the value of your account"))
+    Risk_Account = float(
+        input("Please enter the % of risk you would like for your account (how much you willing to risk per trade) "))
+    Account_risk_1 = Account_Value / 100
+    Account_risk_2 = Account_risk_1 * Risk_Account
+
+    # Obtaining later display information
+    Stock_Ticker = str(input("Please enter the Ticker symbol of your stock"))
+
+    # Calculating the stop loss on the position
+    Stock_Price = float(input("Please enter the price of your stock"))
+    Stock_Quantity = int(input("Please enter how many shares you want to hold on this position"))
+
+    Stock_Position_Value = Stock_Price * Stock_Quantity
+
+    if Stock_Position_Value > Account_Value :
+        print("Sorry this trade is not possibe (Trade position exceeds account value)")
+        menu2()
+    Stop_Loss_Position = Stock_Position_Value + Account_risk_2
+
+    # This is equal to the price at which you should place your stop loss to satisfy you account risk
+    Stop_Loss_Stock_Value = Stop_Loss_Position / Stock_Quantity
+
+    Risk_Reward_Cal = float(input("Please enter the Risk reward ratio you are aiming for (Assume risk is at 1, input the reward value you would like)."))
+
+    #calculating the take-profit level
+    T_1_Cal = Stop_Loss_Stock_Value - Stock_Price
+    Risk_Reward_Cal_2 = T_1_Cal * Risk_Reward_Cal
+    Risk_Reward_Cal_3 = Stock_Price - Risk_Reward_Cal_2
+
+    print(Risk_Reward_Cal_3)
+
+
+menu()
